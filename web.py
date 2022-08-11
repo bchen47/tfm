@@ -17,7 +17,7 @@ def webScrap(d,url,machista):
          print("cookies aceptadas")
       try:
          for x in soup(d.page_source, 'html.parser').find_all("div",{"style":"word-wrap:break-word;"}):
-            text=''.join(list(filter(None,map(lambda x: x.strip(),x.find_all(text=True, recursive=False)))))
+            text=''.join(list(filter(None,map(lambda x: x.strip().replace(";",",").replace("\"","").replace("\n"," "),x.find_all(text=True, recursive=False)))))
             if(text!=''):
                textScrapped.append([text,('1' if machista else '0')])
             
@@ -37,9 +37,10 @@ d = webdriver.Chrome('C://Users/Bc/Desktop/tfm/chromedriver.exe')
 
 for x in urlMachistas:
    webScrap(d,x,True)
-for x in urlNormales:
-   webScrap(d,x,False)
-print(textScrapped)
-with open("array.csv","w+",encoding="utf-8", newline='') as my_csv:
+#for x in urlNormales:
+ #  webScrap(d,x,False)
+
+with open("dataset.csv","w+",encoding="utf-8", newline='') as my_csv:
     newarray = csv.writer(my_csv,delimiter=';')
     newarray.writerows(textScrapped)
+d.close()
